@@ -1,6 +1,9 @@
 import curses
 from curses import wrapper
+import time
 
+# 30:30
+# type in file directory 'cmd' and then type 'python main.py' and the code will run
 
 def start_screen(stdscr):
     stdscr.clear()
@@ -11,18 +14,31 @@ def start_screen(stdscr):
 
 def display_text(stdscr, target, current, wpm=0):  # wpm is an optional parameter with a default value of 0
     stdscr.addstr(target)
+    stdscr.addstr(1, 0, f"WPM: {wpm}")
 
     for i, char in enumerate(current):  # getting the char as well as the index
-        stdscr.addstr(0, i, char, curses.color_pair(1))  # colors each char of the text
+        correct_char = target[i]
+        color = curses.color_pair(1)
+        if char != correct_char:
+            color = curses.color_pair(2)
+        stdscr.addstr(0, i, char, color)  # colors each char of the text
 
 
 def wpm_test(stdscr):  # wpd -> word per minute
     target_text = "Hello world this is some test text for this app!"
     current_text = []
+    wpm = 0
+    start_time = time.time()
 
     while True:  # checks if the user typed correctly
+        time_elapsed = max(time.time() - start_time, 1)  # max function for not get division by 0 error
+
+        # calculates the characters per minute divided by 5,
+        # which is the average word length, to get words per minute
+        wpm = round((len(current_text) / (time_elapsed / 60)) / 5)
+
         stdscr.clear()
-        display_text(stdscr, target_text, current_text)
+        display_text(stdscr, target_text, current_text, wpm)
         stdscr.refresh()
 
         key = stdscr.getkey()
@@ -34,7 +50,7 @@ def wpm_test(stdscr):  # wpd -> word per minute
         if key in ("KEY_BACKSPACE", '\b', "\x7f"):  # backspace key representation in the different operating systems
             if len(current_text) > 0:
                 current_text.pop()  # remove the last element from the list
-        else:
+        elif len(current_text) < len(target_text):  # make sure we cannot add more text than the target text
             current_text.append(key)
 
 

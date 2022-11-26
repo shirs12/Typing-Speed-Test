@@ -71,11 +71,15 @@ def main(stdscr):  # std(standard output) scr(screen)
     curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
     start_screen(stdscr)
-    wpm_test(stdscr)
+    while True:
+        wpm_test(stdscr)
 
-    # asks the user if he wants to play again
-    stdscr.addstr(2, 0, "You completed the text! Press any key to continue...")
-    stdscr.getkey()  # waits for the user to type a key
+        # asks the user if he wants to play again
+        stdscr.addstr(2, 0, "You completed the text! Press any key to continue...")
+        key = stdscr.getkey()  # waits for the user to type a key
+        if ord(key) == 27:  # the game will continue, unless the user presses the esc key to exit
+            break
+
 
 
 wrapper(main)

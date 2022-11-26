@@ -42,6 +42,11 @@ def wpm_test(stdscr):  # wpd -> word per minute
         display_text(stdscr, target_text, current_text, wpm)
         stdscr.refresh()
 
+        # "".join -> combines all the characters to a string with an empty string seperator
+        if "".join(current_text) == target_text:  # checks if the user done writing the target text correctly
+            stdscr.nodelay(False)  # wait for the user to hit a key without getting an error
+            break
+
         # make sure the program won't crash in case the user doesn't type something
         try:
             key = stdscr.getkey()
@@ -59,13 +64,18 @@ def wpm_test(stdscr):  # wpd -> word per minute
 
 
 
-def main(stdscr):  # std(standard output) screen
+def main(stdscr):  # std(standard output) scr(screen)
+    # text colors
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
     start_screen(stdscr)
     wpm_test(stdscr)
+
+    # asks the user if he wants to play again
+    stdscr.addstr(2, 0, "You completed the text! Press any key to continue...")
+    stdscr.getkey()  # waits for the user to type a key
 
 
 wrapper(main)

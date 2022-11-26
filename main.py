@@ -1,6 +1,7 @@
 import curses
 from curses import wrapper
 
+
 def start_screen(stdscr):
     stdscr.clear()
     stdscr.addstr("Welcome to the Speed Typing Test!")
@@ -8,17 +9,20 @@ def start_screen(stdscr):
     stdscr.refresh()
     stdscr.getkey()  # for not immediately close the program
 
+def display_text(stdscr, target, current, wpm=0):  # wpm is an optional parameter with a default value of 0
+    stdscr.addstr(target)
+
+    for i, char in enumerate(current):  # getting the char as well as the index
+        stdscr.addstr(0, i, char, curses.color_pair(1))  # colors each char of the text
+
+
 def wpm_test(stdscr):  # wpd -> word per minute
     target_text = "Hello world this is some test text for this app!"
     current_text = []
 
     while True:  # checks if the user typed correctly
         stdscr.clear()
-        stdscr.addstr(target_text)
-
-        for char in current_text:  # colors the text
-            stdscr.addstr(char, curses.color_pair(1))
-
+        display_text(stdscr, target_text, current_text)
         stdscr.refresh()
 
         key = stdscr.getkey()

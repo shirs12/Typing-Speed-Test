@@ -29,6 +29,7 @@ def wpm_test(stdscr):  # wpd -> word per minute
     current_text = []
     wpm = 0
     start_time = time.time()
+    stdscr.nodelay(True)  # lets the wpm keep running
 
     while True:  # checks if the user typed correctly
         time_elapsed = max(time.time() - start_time, 1)  # max function for not get division by 0 error
@@ -41,9 +42,12 @@ def wpm_test(stdscr):  # wpd -> word per minute
         display_text(stdscr, target_text, current_text, wpm)
         stdscr.refresh()
 
-        key = stdscr.getkey()
+        # make sure the program won't crash in case the user doesn't type something
+        try:
+            key = stdscr.getkey()
+        except:
+            continue  # skip to the next round of the loop
 
-        # TODO: TypeError: ord() expected a character, but string of length 8 found
         if ord(key) == 27:  # ASCII representation for 'esc' key
             break
 

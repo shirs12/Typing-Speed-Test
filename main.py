@@ -1,6 +1,7 @@
 import curses
 from curses import wrapper
 import time
+import random
 
 # 30:30
 # type in file directory 'cmd' and then type 'python main.py' and the code will run
@@ -23,9 +24,14 @@ def display_text(stdscr, target, current, wpm=0):  # wpm is an optional paramete
             color = curses.color_pair(2)
         stdscr.addstr(0, i, char, color)  # colors each char of the text
 
+def load_text():
+    # open text.txt file in read mode, and stores it in 'f'. 'with' make sure the file will be close after it opens.
+    with open("text.txt", "r") as f:
+        lines = f.readlines()  # accessing the file using 'f'
+        return random.choice(lines).strip()  # returns a random line from the file
 
 def wpm_test(stdscr):  # wpd -> word per minute
-    target_text = "Hello world this is some test text for this app!"
+    target_text = load_text()
     current_text = []
     wpm = 0
     start_time = time.time()
@@ -75,7 +81,7 @@ def main(stdscr):  # std(standard output) scr(screen)
         wpm_test(stdscr)
 
         # asks the user if he wants to play again
-        stdscr.addstr(2, 0, "You completed the text! Press any key to continue...")
+        stdscr.addstr(2, 0, "You completed the text! Press any key to continue or esc to exit... ")
         key = stdscr.getkey()  # waits for the user to type a key
         if ord(key) == 27:  # the game will continue, unless the user presses the esc key to exit
             break

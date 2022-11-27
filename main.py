@@ -3,8 +3,6 @@ from curses import wrapper
 import time
 import random
 
-# 30:30
-# type in file directory 'cmd' and then type 'python main.py' and the code will run
 
 def start_screen(stdscr):
     stdscr.clear()
